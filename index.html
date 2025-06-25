@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   FOR LOVE
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+   html {
+    scroll-behavior: smooth;
+   }
+   @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .pulse-animation {
+    animation: pulse 1s infinite;
+  }
+  #mail-content {
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+  }
+
+  /* Music playing animation styles */
+  .music-animation-container {
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2px;
+    margin-bottom: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .music-animation-container.visible {
+    opacity: 1;
+  }
+
+  .music-bar {
+    width: 3px;
+    background-color: #EF4444; /* Tailwind red-500 */
+    display: inline-block;
+    transform-origin: bottom;
+  }
+
+  @keyframes bounceBar {
+    0%, 100% { transform: scaleY(0.2); }
+    50% { transform: scaleY(1); }
+  }
+
+  .music-bar-animated {
+    animation: bounceBar 0.8s infinite ease-in-out alternate;
+  }
+
+  /* Slider image styling */
+  #slider img {
+    object-fit: contain; /* Ensures the entire image is visible within its allocated space */
+    background-color: #e5e7eb; /* Tailwind gray-200 for empty spaces if aspect ratios differ */
+    /* Images are already w-full h-full from Tailwind, object-fit:contain works within that box */
+  }
+  </style>
+ </head>
+ <body class="bg-white text-black font-sans">
+
+  <!-- Romantic Mail/Invitation Overlay -->
+  <div id="romantic-mail-overlay" class="fixed inset-0 bg-pink-100 bg-opacity-90 flex flex-col justify-center items-center z-[100] p-4">
+    <div class="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden transform scale-95 opacity-0" id="mail-content">
+      <div class="relative h-20 sm:h-24 bg-red-400">
+        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-red-500" style="clip-path: polygon(0 0, 100% 0, 50% 100%);"></div>
+      </div>
+      <div class="p-6 sm:p-8 text-center">
+        <h2 class="font-montserrat text-2xl sm:text-3xl font-bold mb-3 text-red-600">An Invitation</h2>
+        <p class="text-gray-700 mb-2 text-sm sm:text-base">Dearest Love,</p>
+        <p class="text-gray-600 mb-6 leading-relaxed text-sm sm:text-base">
+          I've created this little world just for you, filled with memories and melodies that remind me of us.
+          <br>Are you ready to step inside?
+        </p>
+        <!-- MODIFIED BUTTON STYLING FOR BETTER MOBILE VIEW -->
+        <button id="open-letter-button" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 sm:px-8 rounded-full text-base sm:text-lg shadow-md hover:shadow-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-opacity-50">
+          Open My Heart
+        </button>
+      </div>
+      <div class="flex justify-center pb-4">
+        <div class="w-8 h-8 bg-red-300 rounded-full flex items-center justify-center">
+          <i class="fas fa-heart text-white text-sm"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header id="page-header" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+   <div class="flex justify-between items-center">
+    <div class="text-xs font-normal tracking-widest">FROM J</div>
+    <nav class="hidden sm:flex space-x-6 text-xs font-medium text-gray-800 header-nav">
+     <a class="hover:text-black hover:underline header-nav-link" href="#welcome">Home</a>
+     <a class="hover:text-black hover:underline header-nav-link" href="#letters">Letters</a>
+     <a class="hover:text-black hover:underline header-nav-link" href="#music">Music</a>
+     <a class="hover:text-black hover:underline header-nav-link" href="#video">A video</a>
+     <a class="hover:text-black hover:underline header-nav-link" href="#by-j">By J.</a>
+    </nav>
+    <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+   </div>
+   <h1 class="font-montserrat font-extrabold text-4xl sm:text-5xl leading-tight mt-3 max-w-md">FOR LOVE</h1>
+  </header>
+
+  <div id="pulseDot" class="absolute top-6 right-6 w-2 h-2 rounded-full bg-black z-50"></div>
+
+  <main>
+   <section id="welcome" class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+    <h2 class="font-semibold text-lg sm:text-xl">Welcome to my website for you.</h2>
+    <p class="text-xs sm:text-sm text-gray-600 mt-1">here i compiled all my favorite picture of u, letters, and a song.</p>
+    <!-- This div is the slider's viewport. Its width will determine individual slide widths. -->
+    <div class="relative w-full h-[280px] sm:h-[340px] md:h-[400px] max-w-full rounded-xl overflow-hidden shadow-md mt-8">
+     <!-- Added h-full to #slider div -->
+     <div id="slider" class="flex h-full transition-transform duration-700 ease-in-out">
+       <!-- Images use object-fit: contain (via CSS) and object-center (via Tailwind) -->
+       <img src="image1.jpg" alt="Photo 1" class="w-full h-full object-center flex-shrink-0" />
+       <img src="image2.jpg" alt="Photo 2" class="w-full h-full object-center flex-shrink-0" />
+       <img src="image3.jpg" alt="Photo 3" class="w-full h-full object-center flex-shrink-0" />
+       <img src="image4.jpg" alt="Photo 4" class="w-full h-full object-center flex-shrink-0" />
+       <img src="image5.jpg" alt="Photo 5" class="w-full h-full object-center flex-shrink-0" />
+     </div>
+   </div>
+   </section>
+
+   <!-- UPDATED LETTERS SECTION -->
+   <section id="letters" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 mt-8 sm:mt-12">
+    <h2 class="text-center font-montserrat font-bold text-3xl sm:text-4xl leading-tight mb-2">Letters</h2>
+    <p class="text-center text-sm text-gray-600 mb-10">Categorized letters, from my heart to yours.</p>
+    <div id="letter-filters" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10"></div>
+    <div id="letter-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+   </section>
+
+   <section id="music" class="flex flex-col items-center mt-12 sm:mt-16 py-8 px-4 sm:px-6 lg:px-8">
+    <!-- MODIFIED H2 FOR RESPONSIVE TEXT SIZE -->
+    <h2 class="text-lg sm:text-xl font-semibold">Music</h2>
+    <p class="text-xs sm:text-sm font-normal mt-1 mb-6">This song reminds me of you.</p>
+    <div class="w-48 bg-white rounded-lg shadow-lg overflow-hidden relative">
+      <img alt="Dark blurred album cover image on a wall" class="w-full h-48 object-cover" height="192" src="https://storage.googleapis.com/a1aa/image/37638402-b6c1-4581-82c7-08d80eef3ad8.jpg" width="192"/>
+      <div class="p-4 text-center">
+        <div id="music-animation" class="music-animation-container">
+            <span class="music-bar" style="height: 60%;"></span>
+            <span class="music-bar" style="height: 100%;"></span>
+            <span class="music-bar" style="height: 75%;"></span>
+            <span class="music-bar" style="height: 40%;"></span>
+            <span class="music-bar" style="height: 90%;"></span>
+        </div>
+        <h3 class="font-bold text-sm uppercase">PALAGI</h3>
+        <p class="text-xs text-gray-400 tracking-widest">TJKZZ</p>
+        <div class="mt-2 flex justify-center">
+          <button id="playPauseBtn" aria-label="Play or pause audio" class="text-black text-sm focus:outline-none">
+            <i class="fas fa-play" id="playPauseIcon"></i>
+          </button>
+        </div>
+        <audio id="audioPlayer" src="sound.mp3" preload="auto"></audio>
+      </div>
+    </div>
+   </section>
+
+   <section id="video" class="max-w-4xl w-full mx-auto mt-12 sm:mt-20 px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="text-black font-semibold text-xl sm:text-2xl leading-tight">Video</h2>
+      <div class="text-xs sm:text-sm font-sans text-gray-900 mb-2">FROM J</div>
+    </div>
+    <div class="relative w-full aspect-video overflow-hidden rounded-xl shadow-md" id="video-container">
+      <img id="thumbnail" src="https://placehold.co/1280x720/000000/ffffff?text=Video+Thumbnail" alt="Video Thumbnail" class="w-full h-full object-cover cursor-pointer"/>
+      <button id="play-button" aria-label="Play video" class="absolute inset-0 flex justify-center items-center text-white text-5xl transition hover:scale-110 focus:outline-none">
+        <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" >
+          <path d="M8 5v14l11-7z"></path>
+        </svg>
+      </button>
+    </div>
+   </section>
+
+   <section id="by-j" class="max-w-2xl mx-auto text-center px-4 sm:px-6 lg:px-8 mt-12 sm:mt-20">
+    <h2 class="text-black font-semibold text-xl sm:text-2xl leading-tight">By J.</h2>
+    <p class="text-gray-500 text-sm mt-1">Happy birthday to you, love!</p>
+    <img src="letter.jpg" alt="Old paper with handwritten letter text" class="mt-6 w-full max-w-[600px] h-auto mx-auto rounded-lg shadow-md"/>
+   </section>
+
+   <section id="profile" class="max-w-md mx-auto mt-12 sm:mt-20 px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center">
+     <img alt="Profile image of Jane Mape" class="w-20 h-20 object-cover rounded" height="80" src="jane.jpg" width="80"/>
+     <p class="mt-2 text-center text-sm font-normal text-gray-900">Jane Mape</p>
+     <p class="text-center text-xs sm:text-sm font-light text-gray-500">your love.</p>
+    </div>
+   </section>
+  </main>
+
+  <footer class="bg-gray-50 text-gray-700 py-16 mt-20 border-t border-gray-200">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Site Links</h3>
+          <ul class="space-y-3">
+            <li><a href="#welcome" class="text-sm text-gray-600 hover:text-red-500 hover:underline footer-nav-link">Home</a></li>
+            <li><a href="#letters" class="text-sm text-gray-600 hover:text-red-500 hover:underline footer-nav-link">Letters</a></li>
+            <li><a href="#music" class="text-sm text-gray-600 hover:text-red-500 hover:underline footer-nav-link">Music</a></li>
+            <li><a href="#video" class="text-sm text-gray-600 hover:text-red-500 hover:underline footer-nav-link">Video</a></li>
+            <li><a href="#by-j" class="text-sm text-gray-600 hover:text-red-500 hover:underline footer-nav-link">By J.</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Resources</h3>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-sm text-gray-600 hover:text-red-500 hover:underline">Blog (Soon)</a></li>
+            <li><a href="#" class="text-sm text-gray-600 hover:text-red-500 hover:underline">Help(Soon)</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Legal</h3>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-sm text-gray-600 hover:text-red-500 hover:underline">Privacy with Love(Soon)</a></li>
+            <li><a href="#" class="text-sm text-gray-600 hover:text-red-500 hover:underline">Terms of Endearment(Soon)</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Connect with J</h3>
+          <div class="flex space-x-5">
+            <a href="https://www.tiktok.com/@janemape2?_t=ZS-8xNy8i34TbO&_r=1" aria-label="TikTok" class="text-gray-500 hover:text-red-500 transition-colors duration-200"><i class="fab fa-tiktok fa-lg"></i></a>            
+            <a href="https://www.instagram.com/mapejane?igsh=MXJnN2t6a2FrNzgzdw==&utm_source=ig_contact_invite" aria-label="Instagram" class="text-gray-500 hover:text-red-500 transition-colors duration-200"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="https://www.facebook.com/share/1HNBMZrp5J/" aria-label="Facebook" class="text-gray-500 hover:text-red-500 transition-colors duration-200"><i class="fab fa-facebook-f fa-lg"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-gray-200 text-center">
+        <p class="text-sm text-gray-500">© <span id="currentYear"></span> FOR LOVE. Crafted with <i class="fas fa-heart text-red-500"></i> by J.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- SMOOTH SCROLL & COPYRIGHT ---
+        const navLinks = document.querySelectorAll('.header-nav-link, .footer-nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+        const yearSpan = document.getElementById('currentYear');
+        if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+        // --- IMAGE SLIDER SCRIPT (for #welcome section) ---
+        const sliderElement = document.getElementById('slider');
+        if (sliderElement) {
+            const sliderViewport = sliderElement.parentElement; // Get the viewport (the div with overflow:hidden)
+            const slides = Array.from(sliderElement.children);
+            
+            if (slides.length > 0) {
+                const slideCount = slides.length; 
+                let currentIndex = 0;
+                let slideWidth = 0;
+                let firstClone;
+
+                function updateSlideWidthAndPosition() {
+                    // Ensure sliderViewport and sliderElement are valid
+                    if (sliderViewport && sliderElement && slides.length > 0) {
+                        slideWidth = sliderViewport.offsetWidth; // CRITICAL CHANGE: Use viewport's width for slide width
+                        
+                        slides.forEach(slide => {
+                            slide.style.width = `${slideWidth}px`; // Set explicit width for each slide
+                        });
+                        if (firstClone) {
+                            firstClone.style.width = `${slideWidth}px`; // Also for the clone
+                        }
+                        // Recalculate current position without transition for resize
+                        sliderElement.style.transition = 'none';
+                        sliderElement.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+                    }
+                }
+
+                if (slideCount > 0 && slides[0]) { // Check slides[0] to ensure it exists before cloning
+                    firstClone = slides[0].cloneNode(true);
+                    sliderElement.appendChild(firstClone);
+                }
+
+                function goToSlide(index) {
+                    if (!sliderElement) return; // Guard clause
+                    sliderElement.style.transition = 'transform 0.7s ease-in-out';
+                    sliderElement.style.transform = `translateX(-${index * slideWidth}px)`;
+                }
+
+                function loopSlides() {
+                    currentIndex++;
+                    goToSlide(currentIndex); 
+
+                    if (currentIndex === slideCount) { 
+                        setTimeout(() => {
+                            if (!sliderElement) return; // Guard clause
+                            sliderElement.style.transition = 'none';
+                            currentIndex = 0;
+                            sliderElement.style.transform = `translateX(0)`;
+                        }, 700); 
+                    }
+                }
+
+                updateSlideWidthAndPosition(); 
+                let slideInterval = setInterval(loopSlides, 3000);
+
+                window.addEventListener('resize', () => {
+                    clearInterval(slideInterval);
+                    updateSlideWidthAndPosition();
+                    slideInterval = setInterval(loopSlides, 3000); 
+                });
+            }
+        }
+
+
+        // --- ROMANTIC MAIL & AUDIO PLAYER LOGIC ---
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const globalPulseDot = document.getElementById('pulseDot');
+
+        const musicAnimationContainer = document.getElementById('music-animation');
+        const musicBars = musicAnimationContainer ? Array.from(musicAnimationContainer.querySelectorAll('.music-bar')) : [];
+
+        const romanticMailOverlay = document.getElementById('romantic-mail-overlay');
+        const openLetterButton = document.getElementById('open-letter-button');
+        const mailContent = document.getElementById('mail-content');
+
+        if (mailContent) {
+            setTimeout(() => {
+                mailContent.classList.remove('scale-95', 'opacity-0');
+                mailContent.classList.add('scale-100', 'opacity-100');
+            }, 100);
+        }
+
+        if (openLetterButton && romanticMailOverlay && audioPlayer) {
+            openLetterButton.addEventListener('click', () => {
+                if (mailContent) {
+                    mailContent.classList.remove('scale-100', 'opacity-100');
+                    mailContent.classList.add('scale-95', 'opacity-0');
+                }
+                setTimeout(() => {
+                    if (romanticMailOverlay) romanticMailOverlay.style.display = 'none';
+                }, 500);
+
+                const playPromise = audioPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => { syncAudioUI(); })
+                               .catch(error => {
+                                    console.warn("Error playing audio after interaction:", error.name, error.message);
+                                    syncAudioUI(); 
+                                });
+                } else { syncAudioUI(); }
+            });
+        } else {
+            if (romanticMailOverlay) romanticMailOverlay.style.display = 'none'; 
+        }
+
+        function startMusicVisualAnimation() {
+            if (musicAnimationContainer && musicBars.length > 0) {
+                musicAnimationContainer.classList.add('visible');
+                musicBars.forEach((bar, index) => {
+                    bar.classList.add('music-bar-animated');
+                    bar.style.animationDelay = `${index * 0.1}s`;
+                });
+            }
+        }
+
+        function stopMusicVisualAnimation() {
+            if (musicAnimationContainer && musicBars.length > 0) {
+                musicAnimationContainer.classList.remove('visible');
+                musicBars.forEach(bar => {
+                    bar.classList.remove('music-bar-animated');
+                    bar.style.animationDelay = '';
+                });
+            }
+        }
+
+        function syncAudioUI() {
+            if (!audioPlayer || !playPauseIcon) return;
+            if (audioPlayer.paused || audioPlayer.ended) {
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+                if (globalPulseDot) globalPulseDot.classList.remove('pulse-animation');
+                stopMusicVisualAnimation();
+            } else {
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+                if (globalPulseDot) globalPulseDot.classList.add('pulse-animation');
+                startMusicVisualAnimation();
+            }
+        }
+
+        if (audioPlayer) {
+            audioPlayer.addEventListener('play', syncAudioUI);
+            audioPlayer.addEventListener('pause', syncAudioUI);
+            audioPlayer.addEventListener('ended', syncAudioUI);
+            syncAudioUI(); 
+            stopMusicVisualAnimation(); 
+        }
+
+        if (playPauseBtn && audioPlayer) {
+            playPauseBtn.addEventListener('click', () => {
+                if (audioPlayer.paused || audioPlayer.ended) {
+                    audioPlayer.play().catch(e => console.warn("Error playing audio on button click:", e.name, e.message));
+                } else {
+                    audioPlayer.pause();
+                }
+            });
+        }
+
+        // --- VIDEO PLAYER LOGIC (WITH AUDIO MANAGEMENT) ---
+        const videoContainer = document.getElementById('video-container');
+        const videoPlayButton = document.getElementById('play-button');
+        const thumbnail = document.getElementById('thumbnail');
+        let musicShouldResumeAfterVideo = false;
+
+        if (videoContainer && videoPlayButton && thumbnail && audioPlayer) {
+            function playVideoAndManageMusic() {
+                if (!audioPlayer.paused && !audioPlayer.ended) {
+                    musicShouldResumeAfterVideo = true;
+                    audioPlayer.pause();
+                } else {
+                    musicShouldResumeAfterVideo = false;
+                }
+
+                thumbnail.style.display = 'none';
+                videoPlayButton.style.display = 'none';
+
+                let video = videoContainer.querySelector('video');
+                if (!video) {
+                    video = document.createElement('video');
+                    video.setAttribute('controls', '');
+                    video.setAttribute('autoplay', '');
+                    video.className = 'w-full h-full object-cover rounded-xl';
+                    const source = document.createElement('source');
+                    source.src = 'video.mp4'; 
+                    source.type = 'video/mp4';
+                    video.appendChild(source);
+                    videoContainer.appendChild(video);
+
+                    video.addEventListener('play', () => {
+                        console.log("Video playback started.");
+                    });
+
+                    video.addEventListener('pause', () => {
+                        console.log("Video playback paused.");
+                        if (musicShouldResumeAfterVideo) {
+                            audioPlayer.play().catch(e => console.warn("Error resuming audio after video pause:", e.name, e.message));
+                            musicShouldResumeAfterVideo = false;
+                        }
+                    });
+
+                    video.addEventListener('ended', () => {
+                        console.log("Video playback ended.");
+                        if (musicShouldResumeAfterVideo) {
+                            audioPlayer.play().catch(e => console.warn("Error resuming audio after video end:", e.name, e.message));
+                            musicShouldResumeAfterVideo = false;
+                        }
+                        thumbnail.style.display = 'block';
+                        videoPlayButton.style.display = 'flex';
+                        if (videoContainer.contains(video)) {
+                           videoContainer.removeChild(video); 
+                        }
+                    });
+                }
+                
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn("Video play() call failed:", error.name, error.message);
+                        if (musicShouldResumeAfterVideo) {
+                            audioPlayer.play().catch(e => console.warn("Error resuming audio after video play failure:", e.name, e.message));
+                            musicShouldResumeAfterVideo = false;
+                        }
+                        thumbnail.style.display = 'block';
+                        videoPlayButton.style.display = 'flex';
+                        if (videoContainer.contains(video)) {
+                            videoContainer.removeChild(video);
+                        }
+                    });
+                }
+            }
+            videoPlayButton.addEventListener('click', playVideoAndManageMusic);
+            thumbnail.addEventListener('click', playVideoAndManageMusic);
+        }
+
+        // --- LETTERS SECTION SCRIPT ---
+        const lettersData = [
+            { id: 1, text: "salamat sa encouragement mo sakin and sa pagtiwala mo sa kakayanan ko or sa potential ko from the very beginning . wag kang mag alala,  i will always  be there  for you. your first, your last and only palagi.", categories: ['love', 'you'] },
+            { id: 2, text: "Sending special wishes for a birthday that is just as lovely, happy and sweet as you are! May your birthday be a wonderful reminder of how much you are loved.", categories: ['career'] },
+            { id: 3, text: "just wanted to say how proud of you I am! I am always rooting for you and always a text & call away! i love you so much and make sure to make time for yourself too!", categories: ['you', 'health'] },
+            { id: 4, text: "Even when things are tough. I will always love you no matter what. Thanks for being you.", categories: ['love'] },
+            { id: 5, text: "You are brave! You are so loved! Proud of you everyday. Know you're never alone, and I got you. Brighter days ahead, I promise.", categories: ['love'] },
+            { id: 6, text: "From the bottom of my heart, i want you to know that you're the only person i want to love forever.", categories: ['love', 'career'] },
+            { id: 7, text: "As i listen to Forevermore i'm reminded of the countless memories we've created together. Maaaring hindi ito perpekto sa mata ng mundo, ngunit ito'y malalim na sumasalamin sa ating paglalakbay.", categories: ['career', 'love', 'health'] },
+            { id: 8, text: "it's not about finding the perfect song, but about finding a song that perfectly represents us. Happy happy birthday po, tandaan mo i will always be your number one fan!", categories: ['you', 'career'] },
+        ];
+
+        const categoryStyles = {
+            all:    { name: 'All',    btnClass: 'bg-gray-200 text-gray-700 border-gray-400 hover:bg-gray-300', activeBtnClass: 'bg-gray-700 text-white border-gray-700', tagClass: '' },
+            love:   { name: 'Love',   btnClass: 'bg-rose-100 text-rose-700 border-rose-300 hover:bg-rose-200', activeBtnClass: 'bg-rose-500 text-white border-rose-500', tagClass: 'bg-rose-100 text-rose-600 border-rose-300' },
+            health: { name: 'Health', btnClass: 'bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200', activeBtnClass: 'bg-amber-500 text-white border-amber-500', tagClass: 'bg-amber-100 text-amber-600 border-amber-300' },
+            career: { name: 'Career', btnClass: 'bg-violet-100 text-violet-700 border-violet-300 hover:bg-violet-200', activeBtnClass: 'bg-violet-500 text-white border-violet-500', tagClass: 'bg-violet-100 text-violet-600 border-violet-300' },
+            you:    { name: 'You',    btnClass: 'bg-sky-100 text-sky-700 border-sky-300 hover:bg-sky-200', activeBtnClass: 'bg-sky-500 text-white border-sky-500', tagClass: 'bg-sky-100 text-sky-600 border-sky-300' }
+        };
+
+        const filtersContainer = document.getElementById('letter-filters');
+        const cardsContainer = document.getElementById('letter-cards-container');
+        let currentFilter = 'all';
+
+        function renderFilterButtons() {
+            if (!filtersContainer) return;
+            filtersContainer.innerHTML = '';
+            Object.keys(categoryStyles).forEach(key => {
+                const style = categoryStyles[key];
+                const button = document.createElement('button');
+                button.textContent = style.name;
+                button.dataset.filter = key;
+                const isActive = key === currentFilter;
+                button.className = `text-xs font-semibold px-4 py-2 rounded-lg border-2 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-1 ${isActive ? style.activeBtnClass : style.btnClass} ${isActive ? 'ring-current' : 'ring-transparent'}`;
+                button.addEventListener('click', () => handleFilterClick(key));
+                filtersContainer.appendChild(button);
+            });
+        }
+
+        function renderLetters(lettersToDisplay) {
+            if (!cardsContainer) return;
+            cardsContainer.innerHTML = '';
+            if (lettersToDisplay.length === 0) {
+                cardsContainer.innerHTML = `<p class="col-span-full text-center text-gray-500 py-8">No letters found for this category.</p>`;
+                return;
+            }
+            lettersToDisplay.forEach(letter => {
+                const card = document.createElement('div');
+                card.className = 'bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between min-h-[220px] sm:min-h-[250px]';
+                const textElement = document.createElement('p');
+                textElement.className = 'text-xs sm:text-sm text-gray-700 leading-relaxed mb-4 flex-grow';
+                textElement.textContent = letter.text;
+                const tagsContainer = document.createElement('div');
+                tagsContainer.className = 'mt-auto pt-3 border-t border-gray-100';
+                letter.categories.forEach(catKey => {
+                    const style = categoryStyles[catKey];
+                    if (style) {
+                        const tag = document.createElement('span');
+                        tag.textContent = catKey.toUpperCase();
+                        tag.className = `text-[10px] font-bold px-2 py-0.5 rounded-md mr-1.5 border ${style.tagClass}`;
+                        tagsContainer.appendChild(tag);
+                    }
+                });
+                card.appendChild(textElement);
+                card.appendChild(tagsContainer);
+                cardsContainer.appendChild(card);
+            });
+        }
+
+        function handleFilterClick(categoryKey) {
+            currentFilter = categoryKey;
+            const lettersToDisplay = categoryKey === 'all'
+                ? lettersData
+                : lettersData.filter(letter => letter.categories.includes(categoryKey));
+            renderFilterButtons();
+            renderLetters(lettersToDisplay);
+        }
+
+        if (filtersContainer && cardsContainer) {
+            renderFilterButtons();
+            renderLetters(lettersData); 
+        }
+    });
+  </script>
+ </body>
+</html>
